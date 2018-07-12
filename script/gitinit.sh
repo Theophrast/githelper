@@ -75,15 +75,9 @@ ask_private_repo(){
 }
 
 check_for_git(){
-	if ! type "git" > /dev/null; then
-	  echo ''
-	  echo 'git command not found'
-	  echo 'Please install git before use this script to init'
-	  echo '       sudo apt-get install git'
-	  echo ''
-	  exit 1
-	fi
+command -v git >/dev/null 2>&1 || { echo >&2 "Git is required for this script, but it's not installed.  Aborting."; exit 1; }
 }
+
 
 
 check_for_exist(){
