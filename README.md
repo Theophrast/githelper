@@ -7,7 +7,7 @@ Gitinit.sh is a simple script to initialize a new git repo on your git server.
 
 Download gitinit.sh script to your server:
 ```sh
-$ https://raw.githubusercontent.com/Theophrast/gitinit/master/script/gitinit.sh
+$ wget https://raw.githubusercontent.com/Theophrast/gitinit/master/script/gitinit.sh
 ```
 Customize your script, open with nano, change parameters, save it with Ctrl+O
 ```sh

@@ -9,31 +9,29 @@
 #         in a git root folder with a given name
 #
 #                       Theophrast
-#                       2018.07.10
+#                       2018.07.12
 #
 #  If you want to run this script from everywhere,
 #  make it runnable then you can move or copy it to
 #  /usr/bin folder.
 #
+#                   For more info visit:
+#         https://github.com/Theophrast/gitinit
 #
 ##########################################################
 
 #IP address of your git server, use static ip
 GIT_SERVER_IP_ADDRESS='192.168.0.128'
 
-#your git repo base url, this will contain subfolders
+#your git repositories base url, this will contain subfolders
 GIT_REPO_BASE_DIRECTORY='/home/git/git-root'
 
-#your git reosiroties info will be written in this file
+#your git repositories info will be written in this file
 GIT_REPOS_INFO_FILE='/home/git/GIT_REPOSITORIES_INFO.txt'
 
 #default subfolder, if you choose private there will be
 # a folder with your name
 GIT_REPO_DEFAULT_SUBFOLDER='shared'
-
-
-#your git repo is on this device,
-#GIT_DEVICE='sda1'
 
 
 git_subfolder=$GIT_REPO_DEFAULT_SUBFOLDER
