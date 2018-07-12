@@ -137,9 +137,46 @@ write_infos_on_start(){
 	echo
 }
 
+list_available_repositories(){
+clear
+echo '----------------------------------------------------------------------'
+echo 'List of repositories in directory:  '$GIT_REPO_BASE_DIRECTORY
+echo '  '
+
+cd $GIT_REPO_BASE_DIRECTORY
+
+
+for f in *; do
+    if [ -d ${f} ]; then
+         echo ' '$f
+         echo '  '
+	   
+	   
+	   # if subdirectory exist
+		cd $f
+		for gitfolder in *; do
+         	if [ -d ${gitfolder} ]; then
+        	# Will not run if no directories are available
+			echo '    '$gitfolder
+         echo '       '$USER'@'$GIT_SERVER_IP_ADDRESS':'$(pwd)'/'$gitfolder
+         echo '    '
+    		fi
+		done
+		cd ..
+    fi
+	echo '  '
+done
+
+}
+
+show_help(){
+echo 'help files'
+}
+
 
 
 main(){
+
 
 check_for_git
 
@@ -239,6 +276,20 @@ fi
 	echo "--------------------------------------------------" >> $GIT_REPOS_INFO_FILE
 }
 
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -l | --list )           list_available_repositories
+                                exit
+                                ;;
+        -h | --help )           show_help
+                                exit
+                                ;;
+        * )                     show_help
+                                exit 1
+    esac
+    shift
+done
 
 main
 
