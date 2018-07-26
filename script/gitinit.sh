@@ -9,7 +9,7 @@
 #         in a git root folder with a given name
 #
 #                       Theophrast
-#                       2018.07.12
+#                       2018.07.26
 #
 #  If you want to run this script from everywhere,
 #  make it runnable then you can move or copy it to
@@ -19,6 +19,9 @@
 #         https://github.com/Theophrast/gitinit
 #
 ##########################################################
+
+
+#EDIT THESE PARAMETERS BEFORE USE
 
 #IP address of your git server, use static ip
 GIT_SERVER_IP_ADDRESS='192.168.0.128'
@@ -34,6 +37,11 @@ GIT_REPOS_INFO_FILE='/home/git/GIT_REPOSITORIES_INFO.txt'
 GIT_REPO_DEFAULT_SUBFOLDER='shared'
 
 
+
+#DO NOT EDIT PARAMETERS BELOW THIS LINE
+#--------------------------------------------------------
+SCRIPT_VERSION="0.1"
+SCRIPT_NAME="gitinit.sh"
 git_subfolder=$GIT_REPO_DEFAULT_SUBFOLDER
 
 
@@ -95,8 +103,7 @@ confirm_repo_name(){
 	then
     	echo 'Init repository...'
 	else
-    	clear
-		main
+    	init_new_repo
 	fi
 }
 
@@ -138,8 +145,7 @@ write_infos_on_start(){
 }
 
 list_available_repositories(){
-clear
-echo '----------------------------------------------------------------------'
+echo ''
 echo 'List of repositories in directory:  '$GIT_REPO_BASE_DIRECTORY
 echo '  '
 
@@ -169,17 +175,54 @@ done
 
 }
 
-show_help(){
-echo 'help files'
+show_version(){
+echo $SCRIPT_VERSION
+}
+
+show_usage(){
+echo 'usage: '$SCRIPT_NAME' [-i | --init]   [-l | --list]   [-c | --config | --configuration]'
+echo '                  [-h | --help]   [-v | --version] '
+}
+
+show_options(){
+echo 'parameters:'
+echo ''
+echo '    -i, --init                   init a new repository via wizard'
+echo ''
+echo '    -l, --list                   list available git repositories with ssh url'
+echo '    -c, --configuration          show current configuration'
+echo ''
+echo '    -h, --help                   show help'
+echo '    -v, --version                show version information'
+echo ''
+echo 'Full documentation:  <https://github.com/Theophrast/gitinit/>'
 }
 
 
+show_help(){
+show_usage
+echo ''
+show_options
+}
 
-main(){
+show_unknown_option(){
+echo 'Unknown option: '$1
+echo ''
+show_help
+}
+
+show_configuration(){
+echo ''
+echo '   GIT_SERVER_IP_ADDRESS:       '$GIT_SERVER_IP_ADDRESS
+echo '   GIT_REPO_BASE_DIRECTORY:     '$GIT_REPO_BASE_DIRECTORY
+echo '   GIT_REPOS_INFO_FILE:         '$GIT_REPOS_INFO_FILE
+echo '   GIT_REPO_DEFAULT_SUBFOLDER:  '$GIT_REPO_DEFAULT_SUBFOLDER
+echo ''
+}
 
 
-check_for_git
-
+check_dependencies(){
+	check_for_git
 	if (( $EUID == 0 )); then
 			echo "Do not run this script as root!!!"
 			echo "If you cannot acces to git base directory, make it writeable"
@@ -187,9 +230,11 @@ check_for_git
 			echo ""
 			exit 1
 		fi
-	clear
-	
-	check_for_access_repo_and_create
+}
+
+init_new_repo(){
+   clear
+   check_for_access_repo_and_create
    write_infos_on_start
    ask_for_repo_name
    confirm_repo_name
@@ -277,19 +322,29 @@ fi
 }
 
 
+check_dependencies
+
 while [ "$1" != "" ]; do
     case $1 in
-        -l | --list )           list_available_repositories
+        -i | --i | -init | --init )           init_new_repo
                                 exit
                                 ;;
-        -h | --help )           show_help
+        -l | --l | -list | --list )           list_available_repositories
                                 exit
                                 ;;
-        * )                     show_help
+        -c | --c | -config | --config | -configuration | --configuration )   show_configuration
+                                exit
+                                ;;
+        -v | --v | -version | --version )           show_version
+                                exit
+                                ;;
+        -h | --h | -help | --help )           show_help
+                                exit
+                                ;;
+        * )                     show_unknown_option $1
                                 exit 1
     esac
     shift
 done
 
-main
 
