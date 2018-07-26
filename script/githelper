@@ -40,13 +40,14 @@ GIT_REPO_DEFAULT_SUBFOLDER='shared'
 
 #DO NOT EDIT PARAMETERS BELOW THIS LINE
 #--------------------------------------------------------
-SCRIPT_VERSION="0.1"
+SCRIPT_VERSION="0.2"
 SCRIPT_NAME="githelper"
 git_subfolder=$GIT_REPO_DEFAULT_SUBFOLDER
 
 
 findcpu(){
-	grep 'model name' /proc/cpuinfo  | uniq | awk -F':' '{ print $2}'
+	cputype=$( grep 'model name' /proc/cpuinfo  | uniq | awk -F':' '{ print $2}' )
+	echo $cputype
 }
 
 findkernelversion(){
@@ -54,12 +55,42 @@ findkernelversion(){
 }
 
 totalmem(){
-	grep -i 'memtotal' /proc/meminfo | awk -F':' '{ print $2}'
+	totalmemory=$( grep -i 'memtotal' /proc/meminfo | awk -F':' '{ print $2}' )
+	echo $totalmemory
+}
+
+freemem(){
+	freememory=$( grep -i 'memfree' /proc/meminfo | awk -F':' '{ print $2}' )
+	echo $freememory
 }
 
 storagestat(){
 	git_device=$( df $GIT_REPO_BASE_DIRECTORY | awk '/^\/dev/ {print $1}' )
-	df -h | grep $git_device
+	git_stat=$( df -h | grep $git_device )
+	echo $git_stat | awk '/^\/dev/ {print $5}'
+}
+
+storageusedstat(){
+	git_device=$( df $GIT_REPO_BASE_DIRECTORY | awk '/^\/dev/ {print $1}' )
+	git_stat=$( df -h | grep $git_device )
+	echo $git_stat | awk '/^\/dev/ {print $3}'
+}
+
+storageavailablestat(){
+	git_device=$( df $GIT_REPO_BASE_DIRECTORY | awk '/^\/dev/ {print $1}' )
+	git_stat=$( df -h | grep $git_device )
+	echo $git_stat | awk '/^\/dev/ {print $4}'
+}
+
+sotoragetotal(){
+	git_device=$( df $GIT_REPO_BASE_DIRECTORY | awk '/^\/dev/ {print $1}' )
+	git_stat=$( df -h | grep $git_device )
+	echo $git_stat | awk '/^\/dev/ {print $2}'
+}
+
+storage_device(){
+	git_device=$( df $GIT_REPO_BASE_DIRECTORY | awk '/^\/dev/ {print $1}' )
+	echo $git_device
 }
 
 ask_for_repo_name(){
@@ -126,21 +157,26 @@ check_for_access_repo_and_create(){
 	fi
 }
 
-write_infos_on_start(){
-  echo '----------------------------------------------------------------------'
+show_git_server_status(){
 	echo
-	echo '                    Git initalizer               '
+	echo ' Git server status'
 	echo
+	echo "  Git server config"
+	echo "    CPU Type:           $(findcpu)"
+	echo "    Kernel version:     $(findkernelversion)"
+	echo "    Free memory:        $(freemem)"
+	echo "    Total memory:       $(totalmem)"
 	echo
-	echo "    CPU Type : $(findcpu)"
-	echo "    Kernel version : $(findkernelversion)"
-	echo "    Total memory : $(totalmem)"
-	echo "    Storage status: $(storagestat)"
+	echo "  Git storage"
+	echo "    Device:             $(storage_device)"
+	echo "    Total:              $(sotoragetotal)"
+	echo "    Used:               $(storageusedstat)"
+	echo "    Available:          $(storageavailablestat)"
+	echo "    Status:             $(storagestat)"
 	echo
-	echo "    Git directory root url: "
-	echo "    $GIT_REPO_BASE_DIRECTORY/"
+	echo "  Git directory"
+	echo "    Root dir:           $GIT_REPO_BASE_DIRECTORY/"
 	echo
-	echo '----------------------------------------------------------------------'
 	echo
 }
 
@@ -191,7 +227,7 @@ echo $SCRIPT_VERSION
 
 show_usage(){
 echo 'usage: '$SCRIPT_NAME' [-i | --init]  [-l | --list]  [-c | --config | --configuration]'
-echo '                  [-h | --help]  [-v | --version] '
+echo '                 [-s | --stat | --status] [-h | --help]  [-v | --version] '
 }
 
 show_options(){
@@ -201,6 +237,7 @@ echo '    -i, --init                   init a new repository via wizard'
 echo ''
 echo '    -l, --list                   list available git repositories with ssh url'
 echo '    -c, --configuration          show current configuration'
+echo '    -s, --stat, --status         show git server status'
 echo ''
 echo '    -h, --help                   show help'
 echo '    -v, --version                show version information'
@@ -251,7 +288,8 @@ check_dependencies(){
 init_new_repo(){
    clear
    check_for_access_repo_and_create
-   write_infos_on_start
+
+   echo '----------------------------------------------------------------------'
    ask_for_repo_name
    confirm_repo_name
    ask_private_repo
@@ -349,6 +387,9 @@ while [ "$1" != "" ]; do
                                 exit
                                 ;;
         -c | --c | -config | --config | -configuration | --configuration )   show_configuration
+                                exit
+                                ;;
+        -s | --s | -stat | --stat | -status | --status )   show_git_server_status
                                 exit
                                 ;;
         -v | --v | -version | --version )           show_version
