@@ -3,7 +3,7 @@
 ########################################################
 #
 #                     Git initializer
-#                        gitinit.sh
+#                        githelper
 #
 #       automaticatically initialize a new git repo
 #         in a git root folder with a given name
@@ -16,7 +16,7 @@
 #  /usr/bin folder.
 #
 #                   For more info visit:
-#         https://github.com/Theophrast/gitinit
+#         https://github.com/Theophrast/githelper
 #
 ##########################################################
 
@@ -41,7 +41,7 @@ GIT_REPO_DEFAULT_SUBFOLDER='shared'
 #DO NOT EDIT PARAMETERS BELOW THIS LINE
 #--------------------------------------------------------
 SCRIPT_VERSION="0.1"
-SCRIPT_NAME="gitinit.sh"
+SCRIPT_NAME="githelper"
 git_subfolder=$GIT_REPO_DEFAULT_SUBFOLDER
 
 
@@ -180,8 +180,8 @@ echo $SCRIPT_VERSION
 }
 
 show_usage(){
-echo 'usage: '$SCRIPT_NAME' [-i | --init]   [-l | --list]   [-c | --config | --configuration]'
-echo '                  [-h | --help]   [-v | --version] '
+echo 'usage: '$SCRIPT_NAME' [-i | --init]  [-l | --list]  [-c | --config | --configuration]'
+echo '                  [-h | --help]  [-v | --version] '
 }
 
 show_options(){
@@ -195,7 +195,7 @@ echo ''
 echo '    -h, --help                   show help'
 echo '    -v, --version                show version information'
 echo ''
-echo 'Full documentation:  <https://github.com/Theophrast/gitinit/>'
+echo 'Full documentation:  <https://github.com/Theophrast/githelper/>'
 }
 
 
@@ -289,7 +289,7 @@ write_header_to_file(){
 	echo "#                                                #" >> $GIT_REPOS_INFO_FILE
 	echo "#               GIT REPOSITORIES                 #" >> $GIT_REPOS_INFO_FILE
 	echo "#                                                #" >> $GIT_REPOS_INFO_FILE
-	echo "#         initiated by gitinit script            #" >> $GIT_REPOS_INFO_FILE
+	echo "#       initiated by githelper script            #" >> $GIT_REPOS_INFO_FILE
 	echo "#                                                #" >> $GIT_REPOS_INFO_FILE
 	echo "#                                                #" >> $GIT_REPOS_INFO_FILE
 	echo "##################################################" >> $GIT_REPOS_INFO_FILE
