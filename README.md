@@ -7,7 +7,7 @@ Githelper is a simple script to initialize a new git repo on your git server.
 
 Download githelper script to your server:
 ```sh
-$ wget https://raw.githubusercontent.com/Theophrast/gitinit/githelper/script/githelper
+$ wget https://raw.githubusercontent.com/Theophrast/githelper/master/script/githelper
 ```
 Customize your script, open with nano, change parameters (see configuration), save it with Ctrl+O
 ```sh
